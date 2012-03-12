@@ -1,0 +1,8 @@
+Task manager
+============
+Initial version manager for tasks on AVR uC.
+
+Version with 2 timers:
+- with every us
+- with every ms
+
