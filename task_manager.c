@@ -3,7 +3,7 @@
 
 #include "task_manager.h"
 
-void TASK_ADD(void (*execute)(int), int data) {
+void TASK_QUEUE_ADD(void (*execute)(int), int data) {
 	
 	Task* task_p;
 	
@@ -37,9 +37,12 @@ void TASK_ADD(void (*execute)(int), int data) {
 		task_p->data = data;
 		task_p->next_p = NULL;
 	}
+	
+	// increase element counter
+	taskQueue.elementCounter++;
 }
 
-void TASK_EXECUTE_NEXT() {
+void TASK_QUEUE_EXECUTE_NEXT() {
 
 	if(taskQueue.HEAD != NULL) {
 	
@@ -48,6 +51,9 @@ void TASK_EXECUTE_NEXT() {
 		// move HEAD to next elemenet and get first one
 		Task* task_p = taskQueue.HEAD;
 		taskQueue.HEAD = taskQueue.HEAD->next_p;
+		
+		// decrease element counter
+		taskQueue.elementCounter--;		
 		
 		// execute the task
 		task_p->execute(task_p->data);
