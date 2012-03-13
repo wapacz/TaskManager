@@ -5,11 +5,17 @@
 
 
 void task1_Action1(int data) {
-	printf("Hello world! [%d]\n", data);
+	printf("task1_Action1 [%d]\n", data);
+}
+
+void task2_Action1(int data) {
+	printf("task2_Action1 [%d]\n", data);
 }
 
 int main(void) {
 	int i;
+	
+	uTimerQueue.tick();
 	
 	//task1.execute(1);
 	
@@ -17,7 +23,7 @@ int main(void) {
 	taskQueue.add(task1_Action1, 2);
 	taskQueue.add(task1_Action1, 3);
 	taskQueue.add(task1_Action1, 4);
-	taskQueue.add(task1_Action1, 5);
+	taskQueue.add(task2_Action1, 1);
 	//uTimerQueue.add(100, task_Action1, 1);
 	//mTimerQueue.add(100, task_Action1, 1);
 	
@@ -27,7 +33,7 @@ int main(void) {
 	
 	taskQueue.add(task1_Action1, 6);
 	taskQueue.add(task1_Action1, 7);
-	taskQueue.add(task1_Action1, 8);
+	taskQueue.add(task2_Action1, 2);
 	taskQueue.add(task1_Action1, 9);
 	taskQueue.add(task1_Action1, 10);
 		

@@ -3,6 +3,9 @@
 
 #include "task_manager.h"
 
+/******************************************
+ * Normal task queue
+ */
 void TASK_QUEUE_ADD(void (*execute)(int), int data) {
 	
 	Task* task_p;
@@ -61,4 +64,63 @@ void TASK_QUEUE_EXECUTE_NEXT() {
 		// clean up
 		free(task_p);
 	}
+}
+
+
+/******************************************
+ * uTimer queue
+ */
+void U_TIMER_QUEUE_ADD(int delay, void (*execute)(int), int data) {
+	
+	Task* task_p;
+	
+	printf("Adding TASK ");
+	
+	//put into queue
+	if(uTimerQueue.HEAD == NULL) { // => queue empty
+
+		printf("(queue empty)\n");
+
+		/* create new queue element */
+		task_p = (Task*)malloc(sizeof(Task));
+		task_p->execute = execute;
+		task_p->data = data;
+		task_p->next_p = NULL;
+	
+		uTimerQueue.HEAD = task_p;
+	}
+	else {  // => queue not empty
+
+		printf("(queue not empty)\n");
+	
+		// find end of queue
+		task_p = uTimerQueue.HEAD;
+		while(task_p->next_p != NULL)
+			task_p = task_p->next_p;
+		
+		task_p->next_p = (Task*)malloc(sizeof(Task));
+		task_p = task_p->next_p;
+		task_p->execute = execute;
+		task_p->data = data;
+		task_p->next_p = NULL;
+	}
+	
+	// increase element counter
+	uTimerQueue.elementCounter++;
+}
+
+void U_TIMER_QUEUE_TICK() {
+
+}
+
+ 
+/******************************************
+ * mTimer queue
+ */
+void M_TIMER_QUEUE_ADD(int delay, void (*execute)(int), int data) {
+
+}
+
+void M_TIMER_QUEUE_TICK() {
+
 }
