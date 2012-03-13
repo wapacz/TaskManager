@@ -1,0 +1,11 @@
+CC = gcc
+CFLAGS = -g -O2
+OBJECTS = main.o
+
+all: main.exe
+
+main.exe : $(OBJECTS)
+	$(CC) $(CFLAGS) $(OBJECTS) -o main.exe
+
+%.o : %.c
+	$(CC) $(CFLAGS) -c $<
