@@ -10,7 +10,7 @@ typedef struct st_Task {
 struct st_TASK_H {
 	Task* HEAD;
 	void (*add)(void (*execute)(int), int data);
-	void (*execute_next)();
+	void (*executeNext)();
 };
 
 void TASK_ADD(void (*execute)(int), int data);
