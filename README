@@ -2,7 +2,7 @@ Task manager
 ============
 Initial version manager for tasks on AVR uC.
 
-Version with 2 timers:
+Version with 2 timer queues and 1 normal task queue:
 - with every us
 - with every ms
-
+- normal queue
