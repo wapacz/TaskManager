@@ -6,7 +6,9 @@ OBJECTS = $(SOURCES:.c=.o)
 EXECUTABLE = test_task.exe
 
 all : $(SOURCES) $(EXECUTABLE)
-	
+
+force : clean $(SOURCES) $(EXECUTABLE)
+
 $(EXECUTABLE) : $(OBJECTS)
 	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
 
