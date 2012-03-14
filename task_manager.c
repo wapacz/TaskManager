@@ -127,14 +127,14 @@ void TimerQueue_Add(TimerQueue* this, int delay, void (*execute)(int), int data)
 	
 	new_task_p = CreateDelayedTask(delay - sum_delay, execute, data);
 	
-	if(prev_task_p != NULL) { 
+	if(prev_task_p != NULL) { // => previous element exists, his next_p should be updated
 		prev_task_p->next_p = new_task_p;
 	}
-	else {
+	else { // => previous element not exists => new task will be first element, HEAD should be updated
 		this->HEAD = new_task_p;
 	}
 	
-	if(next_task_p != NULL) { 
+	if(next_task_p != NULL) { // next element exists, next_p of new element should be updated
 		new_task_p->next_p = next_task_p;
 		next_task_p->delay -= new_task_p->delay;
 	}
