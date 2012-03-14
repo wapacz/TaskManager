@@ -92,58 +92,94 @@ TimerQueue TimerQueue_Create() {
 
 void TimerQueue_Add(TimerQueue* this, int delay, void (*execute)(int), int data) {
 	
-	int sum_delay;
-	Task *task_p, *curr_task_p, *prev_task_p;
+	int sum_delay = 0;
+	Task *new_task_p, *next_task_p, *prev_task_p;
 	
 	printf("Adding delayed TASK ");
-	
-	//put into queue
-	if(this->HEAD == NULL) { // => queue empty
-
-		// start timer
-		// TIMER1.start();
-	
-		printf("(queue empty)\n");
-		printf(" = %d\n", this->HEAD);
-		/* create new queue element */
-		this->HEAD = CreateDelayedTask(delay, execute, data);
-		printf(" = %d\n", this->HEAD);
 		
-	}
-	else {  // => queue not empty
-
-		printf("(queue not empty)\n");
+	// find place where to insert task
+	prev_task_p = NULL;
+	next_task_p = this->HEAD;
 	
-		task_p = CreateDelayedTask(delay, execute, data);
-	
-		// find place where to put task
-		prev_task_p = NULL;
-		curr_task_p = this->HEAD;
-		sum_delay = curr_task_p->delay;
-		while(curr_task_p != NULL && sum_delay < delay) {
-			printf("*");
-			prev_task_p = curr_task_p;
-			curr_task_p = curr_task_p->next_p;
-			sum_delay += curr_task_p->delay;
+	while(next_task_p != NULL) {
+		
+		// sumarize delay
+		sum_delay += next_task_p->delay;
+		
+		if(sum_delay > delay) {
+			sum_delay -= next_task_p->delay;
+			break;
 		}
 		
+		// set prev pointer nd ...
+		prev_task_p = next_task_p;
+		
+		// ... move poiner to next element
+		next_task_p = next_task_p->next_p;
+	}
+	
+	// prev_task_p - points to element before new_task_p
+	// next_task_p - points to element after new_task_p
+	
+	new_task_p = CreateDelayedTask(delay - sum_delay, execute, data);
+	
+	if(prev_task_p != NULL) { 
+		prev_task_p->next_p = new_task_p;
+	}
+	
+	if(next_task_p != NULL) { 
+		new_task_p->next_p = next_task_p;
+	}
+	else { // next_task_p = NULL => begining of queue, HEAD must me updated
+		this->HEAD = new_task_p;
+	}
+	
+	 // put element in the midlle of queue
+	next_task_p->delay -= new_task_p->delay;
+/*
+
+
+
+
+		
+		//--------------------------
+		
+		while(next_task_p != NULL) {
+			
+			
+			// sumarize delay value
+			sum_delay = sum_delay + prev_task_p->delay; // ?
+			
+			// check if delay greaer then new task delay
+			if(sum_delay > delay) {
+				sum_delay = sum_delay - prev_task_p->delay;
+				break;
+			}
+		}
+
+		printf("sum_delay = %d\n", sum_delay);
+		
+		task_p = CreateDelayedTask(delay - sum_delay, execute, data);
+	
 		if(prev_task_p == NULL) { // => begining of timer queue
-			printf("begining of timer queue\n");
+			printf("begining of timer queue");
 			task_p->next_p = this->HEAD;
 			this->HEAD = task_p;
 		} 
 		else { // => not begining of timer queue
-			printf("not begining of timer queue\n");
+			printf("not begining of timer queue");
 			prev_task_p->next_p = task_p;
-			task_p->next_p = curr_task_p;
+			task_p->next_p = next_task_p;
 		}
 
-		if(curr_task_p != NULL) { // => not end of queue
-			// update delay counter
-			curr_task_p->delay = curr_task_p->delay - task_p->delay;
+		if(next_task_p != NULL) { // => not end of queue
+			// update delay counter on the next element after
+			next_task_p->delay = next_task_p->delay - task_p->delay;
 		}
 	}
-	
+	*/
+	printf("\n");
+		
 	// increase element counter
 	this->elementCounter++;
 }
