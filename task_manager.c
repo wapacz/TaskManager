@@ -95,8 +95,12 @@ void TimerQueue_Add(TimerQueue* this, int delay, void (*execute)(int), int data)
 	int sum_delay = 0;
 	Task *new_task_p, *next_task_p, *prev_task_p;
 	
-	printf("Adding delayed TASK ");
-		
+	printf("Adding delayed TASK\n");
+	
+	if(this->HEAD == NULL) { // queue is empty
+		printf(" *** START TIMER ***\n");
+	}
+	
 	// find place where to insert task
 	prev_task_p = NULL;
 	next_task_p = this->HEAD;
@@ -111,7 +115,7 @@ void TimerQueue_Add(TimerQueue* this, int delay, void (*execute)(int), int data)
 			break;
 		}
 		
-		// set prev pointer nd ...
+		// set prev pointer and ...
 		prev_task_p = next_task_p;
 		
 		// ... move poiner to next element
@@ -126,65 +130,29 @@ void TimerQueue_Add(TimerQueue* this, int delay, void (*execute)(int), int data)
 	if(prev_task_p != NULL) { 
 		prev_task_p->next_p = new_task_p;
 	}
-	
-	if(next_task_p != NULL) { 
-		new_task_p->next_p = next_task_p;
-	}
-	else { // next_task_p = NULL => begining of queue, HEAD must me updated
+	else {
 		this->HEAD = new_task_p;
 	}
 	
-	 // put element in the midlle of queue
-	next_task_p->delay -= new_task_p->delay;
-/*
-
-
-
-
-		
-		//--------------------------
-		
-		while(next_task_p != NULL) {
-			
-			
-			// sumarize delay value
-			sum_delay = sum_delay + prev_task_p->delay; // ?
-			
-			// check if delay greaer then new task delay
-			if(sum_delay > delay) {
-				sum_delay = sum_delay - prev_task_p->delay;
-				break;
-			}
-		}
-
-		printf("sum_delay = %d\n", sum_delay);
-		
-		task_p = CreateDelayedTask(delay - sum_delay, execute, data);
-	
-		if(prev_task_p == NULL) { // => begining of timer queue
-			printf("begining of timer queue");
-			task_p->next_p = this->HEAD;
-			this->HEAD = task_p;
-		} 
-		else { // => not begining of timer queue
-			printf("not begining of timer queue");
-			prev_task_p->next_p = task_p;
-			task_p->next_p = next_task_p;
-		}
-
-		if(next_task_p != NULL) { // => not end of queue
-			// update delay counter on the next element after
-			next_task_p->delay = next_task_p->delay - task_p->delay;
-		}
+	if(next_task_p != NULL) { 
+		new_task_p->next_p = next_task_p;
+		next_task_p->delay -= new_task_p->delay;
 	}
-	*/
-	printf("\n");
-		
+	
 	// increase element counter
 	this->elementCounter++;
 }
 
-void TimerQueue_Tick(TimerQueue* this) {
-
+void TimerQueue_Tick(TimerQueue* this, TaskQueue* taskQueue) {
+	if(this->HEAD != NULL) {
+		this->HEAD->delay--;
+		if(this->HEAD->delay == 0) { // time expired
+			TaskQueue_Add(taskQueue, this->HEAD->execute, this->HEAD->data);
+			this->HEAD = this->HEAD->next_p; // move HEAD to next element, even it's NULL
+		}
+	}
+	else {
+		printf(" *** STOP TIMER ****\n");
+	}
 }
 

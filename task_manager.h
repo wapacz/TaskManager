@@ -32,6 +32,6 @@ typedef struct st_TIMER_QUEUE {
 } TimerQueue;
 TimerQueue TimerQueue_Create();
 void TimerQueue_Add(TimerQueue* this, int delay, void (*execute)(int), int data);
-void TimerQueue_Tick(TimerQueue* this);
+void TimerQueue_Tick(TimerQueue* this, TaskQueue* taskQueue);
 
 #endif
