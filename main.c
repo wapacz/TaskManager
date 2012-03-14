@@ -11,26 +11,23 @@ void task2_Action1(int data) {
 }
 
 int main(void) {
+	
 	int i;
 	
-	//uTimerQueue.add(100, task1_Action1, 1);
-	//uTimerQueue.add(200, task1_Action1, 1);
-	//uTimerQueue.add(150, task1_Action1, 1);
-	//printf(" = %d\n", uTimerQueue.HEAD);
-		
+	TaskQueue taskQ1 = TaskQueue_Create();
+	TimerQueue uTimerQ = TimerQueue_Create();
+	TimerQueue mTimerQ = TimerQueue_Create();
+	
+	TimerQueue_Add(&uTimerQ, 100, task1_Action1, 1);
+	
+	TaskQueue_Add(&taskQ1, task1_Action1, 1);
+	TaskQueue_Add(&taskQ1, task1_Action1, 2);
+	TaskQueue_Add(&taskQ1, task1_Action1, 3);
+	TaskQueue_Add(&taskQ1, task1_Action1, 4);
+	TaskQueue_Add(&taskQ1, task2_Action1, 1);
 	
 	
-	//task1.execute(1);
-	
-	taskQueue.add(task1_Action1, 1);
-	taskQueue.add(task1_Action1, 2);
-	taskQueue.add(task1_Action1, 3);
-	taskQueue.add(task1_Action1, 4);
-	taskQueue.add(task2_Action1, 1);
-	//uTimerQueue.add(100, task_Action1, 1);
-	//mTimerQueue.add(100, task_Action1, 1);
-	
-	Task* task_p = taskQueue.HEAD;
+	Task* task_p = uTimerQ.HEAD;
 	while(task_p != NULL) {
 		printf(" - %d\n", task_p->delay);
 		task_p = task_p->next_p;
@@ -38,17 +35,17 @@ int main(void) {
 	
 	i=100;
 	while(i--)
-		taskQueue.executeNext();
+		TaskQueue_ExecuteNext(&taskQ1);
 	
-	taskQueue.add(task1_Action1, 6);
-	taskQueue.add(task1_Action1, 7);
-	taskQueue.add(task2_Action1, 2);
-	taskQueue.add(task1_Action1, 9);
-	taskQueue.add(task1_Action1, 10);
+	TaskQueue_Add(&taskQ1, task1_Action1, 6);
+	TaskQueue_Add(&taskQ1, task1_Action1, 7);
+	TaskQueue_Add(&taskQ1, task2_Action1, 2);
+	TaskQueue_Add(&taskQ1, task1_Action1, 9);
+	TaskQueue_Add(&taskQ1, task1_Action1, 10);
 		
 	i=100;
 	while(i--)
-		taskQueue.executeNext();
+		TaskQueue_ExecuteNext(&taskQ1);
 	
 	
 	return 0;

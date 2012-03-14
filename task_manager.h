@@ -14,65 +14,24 @@ Task* CreateDelayedTask(int delay, void (*execute)(int), int data);
 /******************************************
  * Normal task queue
  */
-void TASK_QUEUE_ADD(void (*execute)(int), int data);
-void TASK_QUEUE_EXECUTE_NEXT();
-struct st_TASK_QUEUE {
-	Task* HEAD = NULL;
-	void (*add)(void (*execute)(int), int data) = TASK_QUEUE_ADD;
-	void (*executeNext)() = TASK_QUEUE_EXECUTE_NEXT;
-	int elementCounter = 0;
-};
+typedef struct st_TASK_QUEUE {
+	Task* HEAD;
+	int elementCounter;
+} TaskQueue;
+TaskQueue TaskQueue_Create();
+void TaskQueue_Add(TaskQueue* this, void (*execute)(int), int data);
+void TaskQueue_ExecuteNext(TaskQueue* this);
 
-/*
-static struct st_TASK_QUEUE taskQueue = 
-{
-	NULL,        		// HEAD = NULL => empty queue
-	TASK_QUEUE_ADD,
-	TASK_QUEUE_EXECUTE_NEXT,
-	0            		// clear element coutner
-};*/
 
 /******************************************
- * uTimer queue
+ * Timer queue
  */
-struct st_U_TIMER_QUEUE {
+typedef struct st_TIMER_QUEUE {
 	Task* HEAD;
-	void (*add)(int delay, void (*execute)(int), int data);
-	void (*tick)();
 	int elementCounter;
-};
-
-void U_TIMER_QUEUE_ADD(int delay, void (*execute)(int), int data);
-void U_TIMER_QUEUE_TICK();
-
-static struct st_U_TIMER_QUEUE uTimerQueue = 
-{
-	NULL,        		// HEAD = NULL => empty queue
-	U_TIMER_QUEUE_ADD,
-	U_TIMER_QUEUE_TICK,
-	0            		// clear element coutner
-};
-
-/******************************************
- * mTimer queue
- */
-struct st_M_TIMER_QUEUE {
-	Task* HEAD;
-	void (*add)(int delay, void (*execute)(int), int data);
-	void (*tick)();
-	int elementCounter;
-};
-
-void M_TIMER_QUEUE_ADD(int delay, void (*execute)(int), int data);
-void M_TIMER_QUEUE_TICK();
-/*
-static struct st_M_TIMER_QUEUE mTimerQueue = 
-{
-	NULL,        		// HEAD = NULL => empty queue
-	M_TIMER_QUEUE_ADD,
-	M_TIMER_QUEUE_TICK,
-	0            		// clear element coutner
-};
-*/
+} TimerQueue;
+TimerQueue TimerQueue_Create();
+void TimerQueue_Add(TimerQueue* this, int delay, void (*execute)(int), int data);
+void TimerQueue_Tick(TimerQueue* this);
 
 #endif

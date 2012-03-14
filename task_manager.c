@@ -24,26 +24,31 @@ Task* CreateDelayedTask(int delay, void (*execute)(int), int data) {
 /******************************************
  * Normal task queue
  */
-void TASK_QUEUE_ADD(void (*execute)(int), int data) {
+TaskQueue TaskQueue_Create() {
+	TaskQueue queue = {NULL, 0};
+	return queue;
+}
+
+void TaskQueue_Add(TaskQueue* this, void (*execute)(int), int data) {
 	
 	Task *task_p;
 	
 	printf("Adding TASK ");
 	
 	//put into queue
-	if(taskQueue.HEAD == NULL) { // => queue empty
+	if(this->HEAD == NULL) { // => queue empty
 
 		printf("(queue empty)\n");
 
 		/* create new queue element */
-		taskQueue.HEAD = CreateTask(execute, data);
+		this->HEAD = CreateTask(execute, data);
 	}
 	else {  // => queue not empty
 
 		printf("(queue not empty)\n");
 	
 		// find end of queue
-		task_p = taskQueue.HEAD;
+		task_p = this->HEAD;
 		while(task_p->next_p != NULL) {
 			task_p = task_p->next_p;
 		}
@@ -52,21 +57,21 @@ void TASK_QUEUE_ADD(void (*execute)(int), int data) {
 	}
 	
 	// increase element counter
-	taskQueue.elementCounter++;
+	this->elementCounter++;
 }
 
-void TASK_QUEUE_EXECUTE_NEXT() {
+void TaskQueue_ExecuteNext(TaskQueue* this) {
 
-	if(taskQueue.HEAD != NULL) {
+	if(this->HEAD != NULL) {
 	
 		printf("Executing TASK: ");
 	
 		// move HEAD to next elemenet and get first one
-		Task* task_p = taskQueue.HEAD;
-		taskQueue.HEAD = taskQueue.HEAD->next_p;
+		Task* task_p = this->HEAD;
+		this->HEAD = this->HEAD->next_p;
 		
 		// decrease element counter
-		taskQueue.elementCounter--;		
+		this->elementCounter--;		
 		
 		// execute the task
 		task_p->execute(task_p->data);
@@ -78,9 +83,14 @@ void TASK_QUEUE_EXECUTE_NEXT() {
 
 
 /******************************************
- * uTimer queue
+ * Timer queue
  */
-void U_TIMER_QUEUE_ADD(int delay, void (*execute)(int), int data) {
+TimerQueue TimerQueue_Create() {
+	TimerQueue queue = {NULL, 0};
+	return queue;
+}
+
+void TimerQueue_Add(TimerQueue* this, int delay, void (*execute)(int), int data) {
 	
 	int sum_delay;
 	Task *task_p, *curr_task_p, *prev_task_p;
@@ -88,16 +98,16 @@ void U_TIMER_QUEUE_ADD(int delay, void (*execute)(int), int data) {
 	printf("Adding delayed TASK ");
 	
 	//put into queue
-	if(uTimerQueue.HEAD == NULL) { // => queue empty
+	if(this->HEAD == NULL) { // => queue empty
 
 		// start timer
 		// TIMER1.start();
 	
 		printf("(queue empty)\n");
-		printf(" = %d\n", uTimerQueue.HEAD);
+		printf(" = %d\n", this->HEAD);
 		/* create new queue element */
-		uTimerQueue.HEAD = CreateDelayedTask(delay, execute, data);
-		printf(" = %d\n", uTimerQueue.HEAD);
+		this->HEAD = CreateDelayedTask(delay, execute, data);
+		printf(" = %d\n", this->HEAD);
 		
 	}
 	else {  // => queue not empty
@@ -108,7 +118,7 @@ void U_TIMER_QUEUE_ADD(int delay, void (*execute)(int), int data) {
 	
 		// find place where to put task
 		prev_task_p = NULL;
-		curr_task_p = uTimerQueue.HEAD;
+		curr_task_p = this->HEAD;
 		sum_delay = curr_task_p->delay;
 		while(curr_task_p != NULL && sum_delay < delay) {
 			printf("*");
@@ -119,8 +129,8 @@ void U_TIMER_QUEUE_ADD(int delay, void (*execute)(int), int data) {
 		
 		if(prev_task_p == NULL) { // => begining of timer queue
 			printf("begining of timer queue\n");
-			task_p->next_p = uTimerQueue.HEAD;
-			uTimerQueue.HEAD = task_p;
+			task_p->next_p = this->HEAD;
+			this->HEAD = task_p;
 		} 
 		else { // => not begining of timer queue
 			printf("not begining of timer queue\n");
@@ -135,21 +145,10 @@ void U_TIMER_QUEUE_ADD(int delay, void (*execute)(int), int data) {
 	}
 	
 	// increase element counter
-	uTimerQueue.elementCounter++;
+	this->elementCounter++;
 }
 
-void U_TIMER_QUEUE_TICK() {
-
-}
-
- 
-/******************************************
- * mTimer queue
- */
-void M_TIMER_QUEUE_ADD(int delay, void (*execute)(int), int data) {
+void TimerQueue_Tick(TimerQueue* this) {
 
 }
 
-void M_TIMER_QUEUE_TICK() {
-
-}
