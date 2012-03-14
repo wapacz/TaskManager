@@ -14,23 +14,23 @@ Task* CreateDelayedTask(int delay, void (*execute)(int), int data);
 /******************************************
  * Normal task queue
  */
-struct st_TASK_QUEUE {
-	Task* HEAD;
-	void (*add)(void (*execute)(int), int data);
-	void (*executeNext)();
-	int elementCounter;
-};
-
 void TASK_QUEUE_ADD(void (*execute)(int), int data);
 void TASK_QUEUE_EXECUTE_NEXT();
+struct st_TASK_QUEUE {
+	Task* HEAD = NULL;
+	void (*add)(void (*execute)(int), int data) = TASK_QUEUE_ADD;
+	void (*executeNext)() = TASK_QUEUE_EXECUTE_NEXT;
+	int elementCounter = 0;
+};
 
+/*
 static struct st_TASK_QUEUE taskQueue = 
 {
 	NULL,        		// HEAD = NULL => empty queue
 	TASK_QUEUE_ADD,
 	TASK_QUEUE_EXECUTE_NEXT,
 	0            		// clear element coutner
-};
+};*/
 
 /******************************************
  * uTimer queue
