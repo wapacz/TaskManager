@@ -1,11 +1,15 @@
-#ifndef _TASK_MANAGER_
-#define _TASK_MANAGER_
+#ifndef _TASK_MANAGER_H_
+#define _TASK_MANAGER_H_
 
 typedef struct st_Task {
 	void (*execute) (int data);
 	int data;
+	int delay;
 	struct st_Task* next_p;
 } Task;
+
+Task* CreateTask(void (*execute)(int), int data);
+Task* CreateDelayedTask(int delay, void (*execute)(int), int data);
 
 /******************************************
  * Normal task queue
@@ -61,7 +65,7 @@ struct st_M_TIMER_QUEUE {
 
 void M_TIMER_QUEUE_ADD(int delay, void (*execute)(int), int data);
 void M_TIMER_QUEUE_TICK();
-
+/*
 static struct st_M_TIMER_QUEUE mTimerQueue = 
 {
 	NULL,        		// HEAD = NULL => empty queue
@@ -69,6 +73,6 @@ static struct st_M_TIMER_QUEUE mTimerQueue =
 	M_TIMER_QUEUE_TICK,
 	0            		// clear element coutner
 };
-
+*/
 
 #endif

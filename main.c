@@ -2,8 +2,6 @@
 
 #include "task_manager.h"
 
-
-
 void task1_Action1(int data) {
 	printf("task1_Action1 [%d]\n", data);
 }
@@ -15,7 +13,12 @@ void task2_Action1(int data) {
 int main(void) {
 	int i;
 	
-	uTimerQueue.tick();
+	//uTimerQueue.add(100, task1_Action1, 1);
+	//uTimerQueue.add(200, task1_Action1, 1);
+	//uTimerQueue.add(150, task1_Action1, 1);
+	//printf(" = %d\n", uTimerQueue.HEAD);
+		
+	
 	
 	//task1.execute(1);
 	
@@ -26,6 +29,12 @@ int main(void) {
 	taskQueue.add(task2_Action1, 1);
 	//uTimerQueue.add(100, task_Action1, 1);
 	//mTimerQueue.add(100, task_Action1, 1);
+	
+	Task* task_p = taskQueue.HEAD;
+	while(task_p != NULL) {
+		printf(" - %d\n", task_p->delay);
+		task_p = task_p->next_p;
+	}
 	
 	i=100;
 	while(i--)
